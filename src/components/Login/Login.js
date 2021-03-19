@@ -1,13 +1,21 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import firebase from "firebase/app";
 import "firebase/auth";
 import firebaseConfig from './firebase.config';
+import { UserContext } from '../../App';
+import { useHistory, useLocation } from 'react-router-dom';
+import Header from '../Home/Header/Header';
 
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 
 const Login = () => {
+    const [LoggedInUser, setLoggedInUser] = useContext(UserContext)
+    const history = useHistory();
+    const location = useLocation();
+    const { from } = location.state || { from: { pathname: "/" } };
+
     const [newUser, setNewUser] = useState(false);
     const [user, setUser] = useState({
         isSignedIn: false,
@@ -47,7 +55,11 @@ const Login = () => {
                     newUserInfo.error = '';
                     newUserInfo.success = true;
                     setUser(newUserInfo);
-                    updateUserName (user.name);
+                    updateUserName(user.name);
+                    const { displayName, email } = res.user;
+                    const signInUser = { name: displayName, email };
+                    setLoggedInUser(signInUser);
+                    history.replace(from);
                 })
                 .catch((error) => {
                     const newUserInfo = { ...user };
@@ -64,7 +76,10 @@ const Login = () => {
                     newUserInfo.error = '';
                     newUserInfo.success = true;
                     setUser(newUserInfo);
-                    console.log("updated name", res.user)
+                    const { displayName, email } = res.user;
+                    const signInUser = { name: displayName, email };
+                    setLoggedInUser(signInUser);
+                    history.replace(from);
                 })
                 .catch((error) => {
                     const newUserInfo = { ...user };
@@ -88,29 +103,50 @@ const Login = () => {
         }).catch(function (error) {
             console.log(error)
         });
+    };
 
-    }
+    
+        const handleGoogleSignIn = () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
 
-    return (
-        <div>
-            <input type="checkbox" onChange={() => setNewUser(!newUser)} name="" id="" />
-            <label htmlFor="newUser">New User SignUp</label>
+            firebase.auth()
+                .signInWithPopup(provider)
+                .then((result) => {
+                    const { displayName, email } = result.user;
+                    const signInUser = { name: displayName, email }
+                    console.log(signInUser)
+                    setLoggedInUser(signInUser)
+                    history.replace(from)
 
-            <form onSubmit={handleSubmit} style={{ textAlign: 'center' }} >
-                {newUser && <input name="name" type="text" onBlur={handleBlur} placeholder="enter your name" />}
-                <br />
-                <input type="text" name="email" onBlur={handleBlur} placeholder="enter your email" required />
-                <br />
-                <input type="password" name="password" onBlur={handleBlur} placeholder="enter your password" required />
-                <br />
-                <input type="submit" value={newUser ? 'Sign up' : 'Sign In'} />
-            </form>
+                }).catch((error) => {
+                    console.log(error)
+                });
+        }
 
-            <p style={{ color: "red" }}>{user.error}</p>
-            {user.success && <p style={{ color: "green" }}>User {newUser ? 'Created' : 'Logged In'} Successfully</p>}
 
-        </div>
-    );
-};
+        return (
+            <div>
+                <div>
+                <Header></Header>
+                </div>
+                <input type="checkbox" onChange={() => setNewUser(!newUser)} name="" id="" />
+                <label htmlFor="newUser">New User SignUp</label>
 
+                <form onSubmit={handleSubmit} style={{ textAlign: 'center' }} >
+                    {newUser && <input name="name" type="text" onBlur={handleBlur} placeholder="enter your name" />}
+                    <br />
+                    <input type="text" name="email" onBlur={handleBlur} placeholder="enter your email" required />
+                    <br />
+                    <input type="password" name="password" onBlur={handleBlur} placeholder="enter your password" required />
+                    <br />
+                    <input type="submit" value={newUser ? 'Sign up' : 'Sign In'} />
+                </form>
+                <button onClick={handleGoogleSignIn} >Google Login</button>
+
+                <p style={{ color: "red" }}>{user.error}</p>
+                {user.success && <p style={{ color: "green" }}>User {newUser ? 'Created' : 'Logged In'} Successfully</p>}
+
+            </div>
+        );
+    };
 export default Login;
