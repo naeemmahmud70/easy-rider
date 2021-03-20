@@ -5,6 +5,8 @@ import firebaseConfig from './firebase.config';
 import { UserContext } from '../../App';
 import { useHistory, useLocation } from 'react-router-dom';
 import Header from '../Home/Header/Header';
+import './Login.css'
+import background from '../../Bg.png'
 
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
@@ -105,48 +107,57 @@ const Login = () => {
         });
     };
 
-    
-        const handleGoogleSignIn = () => {
-            const provider = new firebase.auth.GoogleAuthProvider();
 
-            firebase.auth()
-                .signInWithPopup(provider)
-                .then((result) => {
-                    const { displayName, email } = result.user;
-                    const signInUser = { name: displayName, email }
-                    console.log(signInUser)
-                    setLoggedInUser(signInUser)
-                    history.replace(from)
+    const handleGoogleSignIn = () => {
+        const provider = new firebase.auth.GoogleAuthProvider();
 
-                }).catch((error) => {
-                    console.log(error)
-                });
-        }
+        firebase.auth()
+            .signInWithPopup(provider)
+            .then((result) => {
+                const { displayName, email } = result.user;
+                const signInUser = { name: displayName, email }
+                console.log(signInUser)
+                setLoggedInUser(signInUser)
+                history.replace(from)
+
+            }).catch((error) => {
+                console.log(error)
+            });
+    }
 
 
-        return (
-            <div>
-                <div>
-                <Header></Header>
+    return (
+        <div style={{backgroundImage:`url(${background })`}}  className="container bg-style">
+            <Header></Header>
+            <div className=" div-center  m-2 ">
+                <div className=" form-style shadow p-3">
+                    <h2>Create An Account</h2>
+                    <form onSubmit={handleSubmit} style={{ textAlign: 'center' }} >
+                        {newUser && <input name="name" type="text" onBlur={handleBlur} placeholder="enter your name" />}
+                        <br />
+                        <input type="text" name="email" onBlur={handleBlur} placeholder="enter your email" required />
+                        <br />
+                        <input type="password" name="password" onBlur={handleBlur} placeholder="enter your password" required />
+                        <br />
+                        <input className="mt-2 btn-style" type="submit" value={newUser ? 'Sign up' : 'Sign In'} />
+                    </form>
+
+                    <div>
+                        <p>New User? <span>
+                            <input type="checkbox" onChange={() => setNewUser(!newUser)} name="" id="" />
+                            <label htmlFor="newUser">SignUp</label> <br />
+                        </span> </p>
+                    </div>
+                    <p>or</p>
+                    <hr />
+
+                    <button className='btn-style' onClick={handleGoogleSignIn} >Continue with Google</button>
                 </div>
-                <input type="checkbox" onChange={() => setNewUser(!newUser)} name="" id="" />
-                <label htmlFor="newUser">New User SignUp</label>
-
-                <form onSubmit={handleSubmit} style={{ textAlign: 'center' }} >
-                    {newUser && <input name="name" type="text" onBlur={handleBlur} placeholder="enter your name" />}
-                    <br />
-                    <input type="text" name="email" onBlur={handleBlur} placeholder="enter your email" required />
-                    <br />
-                    <input type="password" name="password" onBlur={handleBlur} placeholder="enter your password" required />
-                    <br />
-                    <input type="submit" value={newUser ? 'Sign up' : 'Sign In'} />
-                </form>
-                <button onClick={handleGoogleSignIn} >Google Login</button>
 
                 <p style={{ color: "red" }}>{user.error}</p>
                 {user.success && <p style={{ color: "green" }}>User {newUser ? 'Created' : 'Logged In'} Successfully</p>}
-
             </div>
-        );
-    };
+        </div>
+    );
+};
 export default Login;

@@ -17,3 +17,10 @@
           width: 100%;
       }
   }
+  .login{
+      background-color: tomato;
+      color: white;
+      border: 0;
+      border-radius: 3px;
+      padding: 5px;
+  }

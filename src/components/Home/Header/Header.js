@@ -6,17 +6,19 @@ import './Header.css'
 const Header = () => {
     const [loggedInUser, setLoggedInUser] = useContext(UserContext)
     return (
-        <div className="nav-style ">
+        <div className="nav-style container">
             <nav className="nav">
-                <ul>
+            <h2 className="m-3">Easy Rider</h2>
+                <ul className="mt-4">
+                
                     <li>
                         <Link to="/home">Home</Link>
                     </li>
-                    
+
                     <li>
-                        <Link to="/destination">Destination</Link>
+                        <Link to ="/destination">Destination</Link>
                     </li>
-                    <li>
+                    <li className="login">
                         <Link to="/login">Login</Link>
                     </li>
                     <li>

@@ -9,12 +9,7 @@
     margin: 20px;
     padding: 5px;
     border-radius: 7px;
-}
-input{
-    border-radius: 5px;
-    box-shadow: 2px 2px gray;
-    border: 1px solid gray;
-    margin-top: 10px;
+
 }
 .button-style{
     background-color: tomato;
