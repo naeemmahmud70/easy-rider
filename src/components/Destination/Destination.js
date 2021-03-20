@@ -1,7 +1,8 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '../Home/Header/Header';
-import Map from '../Map/Map';
+import Maps from '../Maps/Maps';
+
 import SearchRider from '../SearchRider/SearchRider';
 
 const Destination = () => {
@@ -14,7 +15,7 @@ const Destination = () => {
                     <SearchRider type={type}></SearchRider>
                 </div>
                 <div className="col-md-8">
-                    <Map></Map>
+                    <Maps></Maps>
                 </div>
             </div>
         </div>
