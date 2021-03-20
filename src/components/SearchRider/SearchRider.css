@@ -1,0 +1,27 @@
+.type-img{
+    width: 50px;
+}
+.icon-img{
+    width: 30px;
+}
+.search-style{
+    height: 50px;
+    margin: 20px;
+    padding: 5px;
+    border-radius: 7px;
+}
+input{
+    border-radius: 5px;
+    box-shadow: 2px 2px gray;
+    border: 1px solid gray;
+    margin-top: 10px;
+}
+.button-style{
+    background-color: tomato;
+    color: white;
+    border: 0;
+    border-radius: 5px;
+}
+.form-style{
+    text-align: center;
+}
